@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>درگاه پرداخت اینترنتی شاپرک (شبیه‌ساز)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
+    body { background-color: #f1f5f9; color: #1e293b; direction: rtl; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .gateway-card { background: #ffffff; border-radius: 20px; box-shadow: 0 15px 35px -5px rgba(0,0,0,0.1); width: 100%; max-width: 480px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .gateway-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 24px; text-align: center; position: relative; }
+    .shaparak-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; margin-bottom: 10px; color: #38bdf8; }
+    .gateway-title { font-size: 1.25rem; font-weight: 800; }
+    .gateway-body { padding: 26px; }
+    .order-info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.92rem; }
+    .order-info-row:last-child { border-bottom: none; }
+    .amount-highlight { font-size: 1.3rem; font-weight: 900; color: #0891b2; }
+    .test-alert { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 12px; border-radius: 12px; font-size: 0.82rem; margin: 20px 0; line-height: 1.6; }
+    .btn-action { width: 100%; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; }
+    .btn-pay-success { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
+    .btn-pay-fail { background: #ffffff; border: 1px solid #fca5a5; color: #dc2626; }
+    .btn-pay-cancel { background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; }
+    .btn-pay-success:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-pay-fail:hover { background: #fef2f2; }
+    .btn-pay-cancel:hover { background: #f8fafc; }
+  </style>
+</head>
+<body>
+  <div class="gateway-card">
+    <div class="gateway-header">
+      <div class="shaparak-badge">
+        <span>سامانه پرداخت الکترونیک شاپرک</span>
+      </div>
+      <h1 class="gateway-title" id="gwTitle">شبیه‌ساز درگاه بانکی</h1>
+    </div>
+    <div class="gateway-body">
+      <div class="order-info-row">
+        <span style="color: #64748b;">مبلغ قابل پرداخت:</span>
+        <span class="amount-highlight" id="gwAmount">۰ تومان</span>
+      </div>
+      <div class="order-info-row">
+        <span style="color: #64748b;">کد رهگیری پویش:</span>
+        <span style="font-weight: 700; direction: ltr;" id="gwTracking">---</span>
+      </div>
+      <div class="order-info-row">
+        <span style="color: #64748b;">درگاه انتخابی:</span>
+        <span style="font-weight: 700; color: #0891b2;" id="gwGatewayName">شبیه‌ساز آزمایشی</span>
+      </div>
+      <div class="test-alert">
+        <strong>حالت آزمایشی (Sandbox):</strong><br/>
+        برای بررسی فرآیند اعتبارسنجی سمت سرور و ثبت سهم، یکی از گزینه‌های زیر را انتخاب کنید:
+      </div>
+      <button type="button" class="btn-action btn-pay-success" id="btnPaySuccess">
+        تایید و پرداخت موفق (شبیه‌سازی واریز)
+      </button>
+      <button type="button" class="btn-action btn-pay-fail" id="btnPayFail">
+        شبیه‌سازی تراکنش ناموفق (خطای بانکی)
+      </button>
+      <button type="button" class="btn-action btn-pay-cancel" id="btnPayCancel">
+        انصراف از پرداخت و بازگشت
+      </button>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const trackingCode = params.get('track') || params.get('tracking_code') || params.get('payment_id') || '---';
+    const amount = Number(params.get('amount')) || 0;
+    const authority = params.get('authority') || params.get('Authority') || ('AUTH_' + Math.floor(10000000 + Math.random() * 90000000));
+    const callback = params.get('callback') || params.get('callback_url') || '/';
+    const gw = params.get('gateway') || 'test_gateway';
+
+    document.getElementById('gwTracking').textContent = trackingCode;
+    document.getElementById('gwAmount').textContent = amount.toLocaleString('fa-IR') + ' تومان';
+
+    const gwNames = {
+      zarinpal: 'زرین‌پال (ZarinPal)',
+      idpay: 'آیدی پی (IDPay)',
+      zibal: 'زیبال (Zibal)',
+      nextpay: 'نکست پی (NextPay)',
+      behpardakht: 'به‌پرداخت ملت (Mellat)',
+      mellat: 'به‌پرداخت ملت (Mellat)',
+      saman: 'سامان کیش (Saman)',
+      parsian: 'تجارت الکترونیک پارسیان',
+      pasargad: 'بانک پاسارگاد (Pasargad)',
+      test_gateway: 'شاپرک (شبیه‌ساز پرداخت آزمایشی)'
+    };
+    document.getElementById('gwGatewayName').textContent = gwNames[gw] || gw;
+
+    document.getElementById('btnPaySuccess').onclick = () => {
+      const url = new URL(callback, window.location.origin);
+      url.searchParams.set('payment_status', 'OK');
+      url.searchParams.set('Authority', authority);
+      url.searchParams.set('track', trackingCode);
+      url.searchParams.set('ref_id', 'REF-' + Math.floor(10000000 + Math.random() * 90000000));
+      window.location.href = url.toString();
+    };
+
+    document.getElementById('btnPayFail').onclick = () => {
+      const url = new URL(callback, window.location.origin);
+      url.searchParams.set('payment_status', 'NOK');
+      url.searchParams.set('Authority', authority);
+      url.searchParams.set('track', trackingCode);
+      window.location.href = url.toString();
+    };
+
+    document.getElementById('btnPayCancel').onclick = () => {
+      const url = new URL(callback, window.location.origin);
+      url.searchParams.set('payment_status', 'CANCELLED');
+      url.searchParams.set('Authority', authority);
+      url.searchParams.set('track', trackingCode);
+      window.location.href = url.toString();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سامانه مدیریت پویش نذورات و مشارکت</title>
+  <meta name="description" content="سامانه جامع مدیریت و مشارکت پویشهای خیریه، نذورات، ثبت سهم، درگاه پرداخت و پنل مدیریت پیشرفته" />
+  <meta property="og:title" content="سامانه مدیریت پویش نذورات و مشارکت" />
+  <meta property="og:description" content="سامانه جامع مدیریت و مشارکت پویشهای خیریه، نذورات، ثبت سهم، درگاه پرداخت و پنل مدیریت پیشرفته" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <!-- استایل‌های سفارشی پویش -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <!-- کانتینر اصلی محتوای پویش (پویا توسط جاوااسکریپت) -->
+  <main class="main-wrapper">
+    <div class="app-container" id="campaignMainContent">
+      <!-- اسکلتون لودر موقت قبل از دریافت داده از API -->
+      <div class="loading-skeleton-screen">
+        <div class="campaign-grid-layout">
+          <div>
+            <div class="modern-card">
+              <div class="skeleton-shimmer-box" style="width: 100%; aspect-ratio: 16/9;"></div>
+              <div style="padding: 26px;">
+                <div class="skeleton-shimmer-box" style="width: 110px; height: 26px; border-radius: 999px; margin-bottom: 14px;"></div>
+                <div class="skeleton-shimmer-box" style="width: 75%; height: 34px; margin-bottom: 14px;"></div>
+                <div class="skeleton-shimmer-box" style="width: 100%; height: 16px; margin-bottom: 8px;"></div>
+                <div class="skeleton-shimmer-box" style="width: 90%; height: 16px; margin-bottom: 8px;"></div>
+                <div class="skeleton-shimmer-box" style="width: 60%; height: 16px;"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="modern-card" style="padding: 24px;">
+              <div class="skeleton-shimmer-box" style="width: 50%; height: 24px; margin-bottom: 16px;"></div>
+              <div class="skeleton-shimmer-box" style="width: 100%; height: 14px; border-radius: 999px; margin-bottom: 20px;"></div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                <div class="skeleton-shimmer-box" style="height: 64px; border-radius: 12px;"></div>
+                <div class="skeleton-shimmer-box" style="height: 64px; border-radius: 12px;"></div>
+                <div class="skeleton-shimmer-box" style="height: 64px; border-radius: 12px;"></div>
+                <div class="skeleton-shimmer-box" style="height: 64px; border-radius: 12px;"></div>
+              </div>
+              <div class="skeleton-shimmer-box" style="width: 100%; height: 50px; border-radius: 12px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- فوتر مینیمال -->
+  <footer class="minimal-app-footer">
+    <div class="app-container">
+      <div class="footer-primary-text">سامانه مدیریت و مشارکت پویش‌های مردمی نذورات</div>
+      <div class="footer-secondary-text">تمامی حقوق برای این پویش خیریه و بانیان محترم محفوظ است.</div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       مودال‌های تعاملی کاربر (مشارکت، رسید، پیگیری، شرایط و قوانین)
+       ========================================================================== -->
+  <!-- مودال ثبت مشارکت و اتصال به درگاه بانکی -->
+  <div class="modal-backdrop-smooth" id="modalParticipate">
+    <div class="modal-container-card">
+      <div class="modal-head-row">
+        <h3 class="modal-head-title">ثبت سهم مشارکت و پرداخت</h3>
+        <button type="button" class="btn-modal-close-icon" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <div style="background: var(--primary-light); border: 1px solid var(--primary-border); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.9rem; color: var(--primary-dark); font-weight: 700;">سهم انتخابی: <strong id="modalSharesCount" style="color: var(--primary);">۱ سهم</strong></span>
+          <span style="font-size: 1.1rem; color: var(--primary); font-weight: 900;" id="modalTotalAmount">۵۰,۰۰۰ تومان</span>
+        </div>
+        <form id="formPayment" action="javascript:void(0);">
+          <div class="form-field-unit">
+            <label class="form-field-label-text" for="inputPayerName" style="display: flex; align-items: baseline; gap: 6px;">
+              <span>نام و نام خانوادگی</span>
+              <span style="color: #e11d48; font-weight: 800;">*</span>
+            </label>
+            <input type="text" id="inputPayerName" class="form-field-input-box" placeholder="مثال: امید احمدی" required />
+          </div>
+          <div class="form-field-unit" style="margin-top: 4px; margin-bottom: 14px;">
+            <label style="display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 0.88rem; color: #334155; user-select: none;">
+              <input type="checkbox" id="chkAnonymousPayment" style="width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer;" />
+              <span style="font-weight: 700; color: #1e293b;">میخواهم گمنام باشم</span>
+            </label>
+            <div style="font-size: 0.77rem; color: #64748b; margin-top: 3px; padding-right: 27px; line-height: 1.5;">
+              در صورت انتخاب، نام شما در بخش مشارکت‌های عمومی با عنوان «گمنام» نمایش می‌یابد و نام واقعی فقط برای امور مالی ثبت می‌شود.
+            </div>
+          </div>
+          <div class="form-field-unit">
+            <label class="form-field-label-text" for="inputPayerPhone">شماره همراه <span style="color: #e11d48;">*</span></label>
+            <input type="tel" id="inputPayerPhone" class="form-field-input-box" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required style="direction: ltr; text-align: right;" />
+          </div>
+          <div class="form-field-unit">
+            <label class="form-field-label-text" for="inputPayerDesc" style="display: flex; align-items: baseline; gap: 6px;">
+              <span>نیت یا یادداشت</span>
+              <span style="font-size: 0.78rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+            </label>
+            <textarea id="inputPayerDesc" class="form-field-textarea-box" rows="2" placeholder="به نیت سلامتی، شادی روح اموات و..."></textarea>
+          </div>
+          <div class="form-field-unit" style="margin-top: 14px; margin-bottom: 6px;">
+            <label style="display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 0.88rem; color: #334155; user-select: none;">
+              <input type="checkbox" id="chkAcceptTerms" required style="width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer;" />
+              <span>قوانین و شرایط مشارکت در پویش را مطالعه کرده و می‌پذیرم.</span>
+            </label>
+          </div>
+          <div id="paymentErrorMessage" style="display: none; background: #fff1f2; border: 1px solid #fecdd3; color: #be123c; padding: 10px 14px; border-radius: 10px; font-size: 0.84rem; margin-top: 14px; margin-bottom: 14px;"></div>
+          <button type="submit" id="btnSubmitPayment" class="btn-donate-cta" style="margin-top: 10px; opacity: 0.5; cursor: not-allowed;" disabled>
+            <span>تایید و پرداخت نذر</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال نمایش رسید پرداخت -->
+  <div class="modal-backdrop-smooth" id="modalReceipt">
+    <div class="modal-container-card">
+      <div class="modal-head-row" id="receiptModalHeadRow" style="background: #f0fdfa; border-bottom-color: #a7f3d0;">
+        <h3 class="modal-head-title" id="receiptModalTitle" style="color: #0d9488; display: flex; align-items: center; gap: 8px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>رسید تایید پرداخت</span>
+        </h3>
+        <button type="button" class="btn-modal-close-icon" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <p style="font-size: 0.92rem; color: #334155; margin-bottom: 20px; line-height: 1.7;" id="receiptMessageText">
+          مشارکت شما با موفقیت ثبت شد. اطلاعات تراکنش به شرح زیر است:
+        </p>
+        <div style="background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 14px; padding: 20px; margin-bottom: 20px; font-size: 0.9rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span style="color: var(--text-muted);">کد پیگیری سیستم:</span>
+            <span style="font-weight: 900; color: var(--primary); font-size: 1.1rem;" id="receiptTrackingCode">---</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;" id="rowReceiptTxn">
+            <span style="color: var(--text-muted);">شماره ارجاع بانک:</span>
+            <span style="font-weight: 700; direction: ltr;" id="receiptTxnId">---</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span style="color: var(--text-muted);">نام مشارکت‌کننده:</span>
+            <span style="font-weight: 700;" id="receiptPayerName">---</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span style="color: var(--text-muted);">تعداد سهم:</span>
+            <span style="font-weight: 700;" id="receiptShares">---</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span style="color: var(--text-muted);">مبلغ پرداخت شده:</span>
+            <span style="font-weight: 900; color: var(--primary);" id="receiptAmount">---</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">تاریخ و ساعت:</span>
+            <span id="receiptDate">---</span>
+          </div>
+        </div>
+        <button type="button" class="btn-donate-cta" data-close-modal>
+          <span>متوجه شدم</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال استعلام و پیگیری پرداخت -->
+  <div class="modal-backdrop-smooth" id="modalTrack">
+    <div class="modal-container-card">
+      <div class="modal-head-row">
+        <h3 class="modal-head-title">پیگیری و استعلام پرداخت</h3>
+        <button type="button" class="btn-modal-close-icon" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <form id="formTrack" action="javascript:void(0);" style="margin-bottom: 20px;">
+          <div class="form-field-unit">
+            <label class="form-field-label-text" for="inputTrackCode">کد پیگیری یا شماره تماس</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="inputTrackCode" class="form-field-input-box" placeholder="مثال: POY-123456 یا ۰۹۱۲..." required />
+              <button type="submit" class="btn-donate-cta" style="width: auto; padding: 10px 18px; font-size: 0.9rem;">
+                استعلام
+              </button>
+            </div>
+          </div>
+        </form>
+        <div id="trackResultBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال قوانین و مقررات پویش -->
+  <div class="modal-backdrop-smooth" id="modalRulesTerms">
+    <div class="modal-container-card" style="max-width: 640px;">
+      <div class="modal-head-row">
+        <h3 class="modal-head-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>قوانین و مقررات پویش نذورات</span>
+        </h3>
+        <button type="button" class="btn-modal-close-icon" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-content-body" style="max-height: 72vh; overflow-y: auto; padding: 22px 24px; font-size: 0.9rem; line-height: 1.9; color: #334155;">
+        <div id="modalRulesContentContainer">
+          <h4 style="font-size: 0.98rem; font-weight: 800; color: #0f172a; margin-top: 4px; margin-bottom: 8px;">مقدمه و اهداف پویش</h4>
+          <p style="margin-bottom: 10px;">
+            این سامانه جهت تسهیل در جمع‌آوری نذورات و مشارکت‌های مردمی به صورت شفاف، سهم‌بندی شده و دقیق راه‌اندازی شده است. تمامی مبالغ واریزی منحصراً صرف اهداف اعلام‌شده در عنوان و توضیحات پویش می‌گردد.
+          </p>
+          <h4 style="font-size: 0.98rem; font-weight: 800; color: #0f172a; margin-top: 16px; margin-bottom: 8px;">نکات مهم واریز وجه</h4>
+          <ul style="padding-right: 20px; margin-bottom: 16px; list-style-type: disc;">
+            <li style="margin-bottom: 6px;">واریز وجه صرفاً از طریق شبکه رسمی شاپرک و درگاه‌های دارای مجوز انجام می‌شود.</li>
+            <li style="margin-bottom: 6px;">پس از تکمیل پرداخت، کد پیگیری یکتا نمایش داده شده و سهم شما در داشبورد ثبت می‌شود.</li>
+            <li style="margin-bottom: 6px;">در صورت بروز هرگونه مغایرت بانکی، وجه کسر شده ظرف ۷۲ ساعت توسط شاپرک بازگردانده می‌شود.</li>
+          </ul>
+          <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 14px 16px; margin-top: 18px; margin-bottom: 18px; font-size: 0.85rem; color: #64748b;">
+            <div style="font-weight: 700; color: #334155; margin-bottom: 4px;">پشتیبانی و ارتباط با مسئول پویش</div>
+            <div>شماره تماس ثبت‌شده در پویش آماده پاسخگویی به سوالات مشارکت‌کنندگان محترم است.</div>
+          </div>
+        </div>
+        <button type="button" class="btn-donate-cta" data-close-modal style="margin-top: 10px;">
+          <span>بستن و بازگشت</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- توست پیام‌ها -->
+  <div class="toast-container-anchor" id="toastContainer"></div>
+
+  <!-- اسکریپت‌ها -->
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/public.js"></script>
+</body>
+</html>

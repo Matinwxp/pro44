@@ -1,0 +1,26 @@
+# ==============================================================================
+# امنیت پوشه آپلود: uploads/.htaccess
+# ممانعت از اجرای هرگونه اسکریپت PHP یا اجرایی در این پوشه
+# ==============================================================================
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# غیرفعال کردن اجرای اسکریپت‌ها
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phar .cgi .pl .py
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phar .cgi .pl .py
+
+# مجاز بودن فقط فایل‌های تصویر
+<FilesMatch "(?i)\.(jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+Options -Indexes -ExecCGI

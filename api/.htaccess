@@ -1,0 +1,40 @@
+# ==============================================================================
+# پیکربندی امنیتی و مسیریابی پوشه API: api/.htaccess
+# ==============================================================================
+
+# ممانعت از مشاهده و دانلود مستقیم فایل‌های حساس و پیکربندی دیتابیس
+<FilesMatch "^(config\.php|database\.php|helpers\.php|\.env|\.git.*)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# جلوگیری از فهرست‌بندی محتویات دایرکتوری (Directory Listing)
+Options -Indexes
+
+# عبور دادن هدر احراز هویت در Apache و FastCGI / PHP-FPM
+CGIPassAuth On
+<IfModule mod_setenvif.c>
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+    SetEnvIf X-Auth-Token "(.*)" HTTP_X_AUTH_TOKEN=$1
+    SetEnvIf X-Admin-Token "(.*)" HTTP_X_ADMIN_TOKEN=$1
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /api/
+
+    # عبور دادن هدر Authorization به متغیرهای محیطی PHP
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+    # در صورتی که فایل مستقیماً وجود دارد، همان را اجرا کن
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # در صورتی که نام فایل با پسوند php وجود دارد، آن را اجرا کن
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [L,QSA]
+
+    # سایر مسیرهای تمیز به index.php ارسال شوند
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>

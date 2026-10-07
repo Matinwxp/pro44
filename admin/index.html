@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>پنل مدیریت پویش نذورات و مشارکت‌های مردمی</title>
+  <meta name="description" content="سامانه جامع مدیریت پویش‌ها، تراکنش‌ها، درگاه‌های پرداخت و گزارشات" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <!-- ==========================================================================
+       صفحه ورود به مدیریت (Admin Login Screen)
+       ========================================================================== -->
+  <div class="admin-login-wrapper" id="adminLoginScreen">
+    <!-- پاپ‌آپ بازگشت به صفحه عمومی پویش در بالا سمت چپ -->
+    <a href="/" class="login-return-popup" title="بازگشت به صفحه عمومی پویش">
+      <span class="popup-return-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </span>
+      <span class="popup-return-text">بازگشت به صفحه عمومی پویش</span>
+    </a>
+
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-emblem">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h2 class="login-title">ورود به پنل مدیریت پویش</h2>
+        <p class="login-subtitle">سامانه مدیریت و نظارت بر مشارکت‌های مردمی</p>
+      </div>
+      <div class="login-body">
+        <form id="adminLoginForm" action="javascript:void(0);">
+          <div class="form-field-group">
+            <label class="form-field-label" for="adminEmailInput">ایمیل مدیریت</label>
+            <input 
+              type="email" 
+              id="adminEmailInput" 
+              class="form-control-input" 
+              placeholder="Matinshariati1404@gmail.com"
+              style="direction: ltr; text-align: left; font-size: 1rem;" 
+              required 
+              autocomplete="username" 
+            />
+          </div>
+          <div class="form-field-group">
+            <label class="form-field-label" for="adminPasswordInput">رمز عبور</label>
+            <input 
+              type="password" 
+              id="adminPasswordInput" 
+              class="form-control-input" 
+              placeholder="••••••••"
+              style="direction: ltr; text-align: left; font-size: 1rem;" 
+              required 
+              autocomplete="current-password" 
+            />
+          </div>
+          <div id="loginErrorMessage" style="display: none; background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; text-align: center;"></div>
+          <button type="submit" class="btn-login-submit" id="btnAdminLoginSubmit">
+            ورود به پنل مدیریت
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="sidebarOverlay" class="sidebar-overlay-backdrop"></div>
+
+  <!-- ==========================================================================
+       پوسته اصلی پنل مدیریت (Admin Application Shell)
+       ========================================================================== -->
+  <div class="admin-shell" id="adminAppShell" style="display: none;">
+    <!-- سایدبار ناوبری -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-badge">پ</div>
+        <div>
+          <div class="sidebar-brand-title">مدیریت پویش‌ها</div>
+          <div style="font-size: 0.72rem; color: #64748b;">سامانه نذورات و اطعام</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-item-btn active" data-section="dashboard">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </span>
+          <span>داشبورد و آمار</span>
+        </button>
+        <button type="button" class="nav-item-btn" data-section="campaigns">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+              <line x1="4" y1="22" x2="4" y2="15"/>
+            </svg>
+          </span>
+          <span>لیست پویش‌ها</span>
+        </button>
+        <button type="button" class="nav-item-btn" data-section="payments">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+          </span>
+          <span>تراکنش‌ها و واریزی‌ها</span>
+        </button>
+        <button type="button" class="nav-item-btn" data-section="reports">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </span>
+          <span>گزارش عملکرد مالی</span>
+        </button>
+        <button type="button" class="nav-item-btn" data-section="users">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </span>
+          <span>کاربران</span>
+        </button>
+        <button type="button" class="nav-item-btn" data-section="logs">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </span>
+          <span>لاگ‌ها و رویدادهای سیستم</span>
+        </button>
+        <button type="button" class="nav-item-btn" data-section="settings">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </span>
+          <span>تنظیمات درگاه و دیتابیس</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="admin-user-pill">
+          <div>
+            <div style="font-size: 0.74rem; color: #94a3b8;">کاربر فعال:</div>
+            <div class="admin-phone-tag" id="adminLoggedInEmail" style="font-size: 0.8rem; direction: ltr;">Matinshariati1404@gmail.com</div>
+          </div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></div>
+        </div>
+        <button type="button" id="btnAdminLogout" class="btn-logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>خروج از حساب</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- محتوای اصلی پنل -->
+    <div class="admin-main-wrap">
+      <!-- نوار بالا (Top Bar) -->
+      <header class="admin-top-bar">
+        <div class="top-bar-right">
+          <button type="button" id="btnToggleSidebar" class="btn-sidebar-toggle" aria-label="منوی سایدبار">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="page-breadcrumb" id="adminBreadcrumb">داشبورد و آمار کلی</div>
+        </div>
+        <div class="top-bar-left" style="display: flex; align-items: center; gap: 14px;">
+          <!-- منوی اعلان‌های مدیریت (Notification Dropdown) -->
+          <div class="admin-notif-container" id="adminNotifContainer" style="position: relative;">
+            <button type="button" id="btnAdminNotificationsToggle" class="btn-notif-bell" aria-label="اعلان‌های مدیریت" title="اعلان‌های مدیریت و رویدادها">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span id="notifBadgeCount" class="notif-badge-pill" style="display: none;">۰</span>
+            </button>
+            <!-- پنل کشویی اعلان‌ها -->
+            <div id="adminNotificationsDropdown" class="admin-notif-dropdown" style="display: none;">
+              <div class="notif-dropdown-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-weight: 800; font-size: 0.95rem; color: #0f172a;">اعلان‌ها و رویدادها</span>
+                  <span id="notifUnreadHeaderTag" class="notif-unread-tag" style="display: none;">۰ جدید</span>
+                </div>
+                <button type="button" id="btnMarkAllNotifsRead" class="btn-notif-mark-all" title="خوانده شدن همه اعلان‌ها">
+                  <span>خوانده شدن همه</span>
+                </button>
+              </div>
+              <!-- تب‌های ۳ گانه اعلان‌ها: کاربران، پنل مدیریت، سایت -->
+              <div class="notif-category-tabs" id="notifCategoryTabs">
+                <button type="button" class="notif-cat-tab-btn active" data-notif-category="users">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                  </svg>
+                  <span>کاربران</span>
+                  <span class="cat-count-badge" id="notifCatBadgeUsers">۰</span>
+                </button>
+                <button type="button" class="notif-cat-tab-btn" data-notif-category="admin">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span>پنل مدیریت</span>
+                  <span class="cat-count-badge" id="notifCatBadgeAdmin">۰</span>
+                </button>
+                <button type="button" class="notif-cat-tab-btn" data-notif-category="site">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                  <span>سایت</span>
+                  <span class="cat-count-badge" id="notifCatBadgeSite">۰</span>
+                </button>
+              </div>
+              <div id="adminNotificationsList" class="notif-dropdown-list">
+                <!-- اعلان‌ها به صورت پویا با اسکریپت رندر می‌شوند -->
+              </div>
+              <div class="notif-dropdown-footer">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.78rem; color: #64748b;">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span>بروزرسانی زنده اعلان‌های مدیریت فعال است</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="/" target="_blank" class="btn-view-public">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            <span>مشاهده پویش عمومی</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="admin-content-viewport">
+        <!-- ==================== بخش داشبورد ==================== -->
+        <section id="section-dashboard" class="admin-section active">
+          <div class="stats-grid-dashboard">
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">کل پویش‌ها</span>
+                <span class="stat-number-bold" id="dashTotalCampaigns">۰</span>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-emerald">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                  <line x1="4" y1="22" x2="4" y2="15"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">پویش‌های فعال</span>
+                <span class="stat-number-bold" style="color: #047857;" id="dashActiveCampaigns">۰</span>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-amber">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">سهم‌های تکمیل‌شده</span>
+                <span class="stat-number-bold" id="dashCompletedShares">۰</span>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-blue">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">کل مبالغ واریزی</span>
+                <span class="stat-number-bold" style="color: #047857; font-size: 1.45rem;" id="dashCollectedAmount">۰ تومان</span>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="8" cy="8" r="6"/>
+                  <path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>
+                  <path d="M7 6h1v4"/>
+                  <path d="m16.71 13.88.7.71-2.82 2.82"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-actions-bar">
+            <span class="quick-actions-title">دسترسی سریع:</span>
+            <button type="button" class="btn-quick-action primary" data-quick-action="add-campaign">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>ایجاد پویش جدید</span>
+            </button>
+            <button type="button" class="btn-quick-action" data-quick-action="add-payment">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <span>ثبت واریز دستی</span>
+            </button>
+            <button type="button" class="btn-quick-action" data-quick-action="campaigns">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg>
+              <span>مدیریت پویش‌ها</span>
+            </button>
+            <button type="button" class="btn-quick-action" data-quick-action="reports">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              <span>مشاهده گزارشات</span>
+            </button>
+          </div>
+
+          <div class="table-card" style="padding: 24px; margin-bottom: 28px;" id="dashActiveCampaignSpotlight"></div>
+
+          <div class="table-card">
+            <div class="table-toolbar">
+              <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a;">آخرین واریزی‌های ثبت شده</h3>
+              <button type="button" class="btn-quick-action" onclick="navigateToSection('payments')">مشاهده همه واریزها</button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>کد پیگیری</th>
+                    <th>نام واریز کننده</th>
+                    <th>عنوان پویش</th>
+                    <th>سهم</th>
+                    <th>مبلغ (تومان)</th>
+                    <th>وضعیت</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentPaymentsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== بخش لیست پویش‌ها ==================== -->
+        <section id="section-campaigns" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major">مدیریت پویش‌ها</h2>
+              <p class="section-desc-muted">مشاهده، ویرایش و انتشار پویش‌های مردمی</p>
+            </div>
+            <button type="button" class="btn-quick-action primary" onclick="navigateToSection('add-campaign')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>ایجاد پویش جدید</span>
+            </button>
+          </div>
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>عنوان پویش</th>
+                    <th>کل سهم‌ها</th>
+                    <th>قیمت هر سهم</th>
+                    <th>مبلغ هدف</th>
+                    <th>سهم‌های پرداخت‌شده</th>
+                    <th>باقیمانده</th>
+                    <th>پیشرفت</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="campaignsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== بخش ایجاد پویش جدید ==================== -->
+        <section id="section-add-campaign" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major" id="addCampaignSectionTitle">ایجاد و انتشار پویش جدید</h2>
+              <p class="section-desc-muted">مشخصات پویش، پوستر، تعداد سهم‌ها و اطلاعات رویداد را وارد نمایید</p>
+            </div>
+          </div>
+          <div class="form-card">
+            <form id="formAddCampaign" action="javascript:void(0);">
+              <div class="form-field-group">
+                <label class="form-field-label" for="addCampTitle">عنوان پویش *</label>
+                <input type="text" id="addCampTitle" class="form-control-input" placeholder="مثال: پویش اطعام غدیر و نذر قربانی" required />
+              </div>
+              <div class="form-field-group">
+                <label class="form-field-label" for="addCampDesc">توضیحات و اهداف پویش</label>
+                <textarea id="addCampDesc" class="form-control-textarea" rows="4" placeholder="توضیحات تکمیلی و نیت پویش..."></textarea>
+              </div>
+
+              <!-- بخش پوستر و تصویر پویش -->
+              <div class="form-field-group" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 18px; border-radius: 12px; margin-bottom: 22px;">
+                <label class="form-field-label" style="font-weight: 800; color: #047857; font-size: 0.95rem; margin-bottom: 6px;">
+                  تصویر پوستر پویش (اختیاری)
+                </label>
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 14px;">
+                  می‌توانید فایلی از رایانه خود انتخاب کنید یا آدرس اینترنتی مستقیم تصویر را درج نمایید:
+                </p>
+                <div style="margin-bottom: 14px;">
+                  <label for="addCampImageFile" style="display: block; font-size: 0.84rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                    انتخاب فایل تصویر پوستر
+                  </label>
+                  <input 
+                    type="file" 
+                    id="addCampImageFile" 
+                    accept="image/*" 
+                    class="form-control-input" 
+                    style="padding: 10px; cursor: pointer; background: #ffffff; border: 2px dashed #047857;" 
+                  />
+                  <div style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">فرمت‌های مجاز: JPG, PNG, WEBP (حداکثر ۵ مگابایت)</div>
+                </div>
+                <div style="margin-bottom: 14px;">
+                  <label for="addCampImageUrlInput" style="display: block; font-size: 0.84rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                    یا وارد کردن آدرس مستقیم اینترنتی (URL)
+                  </label>
+                  <input 
+                    type="url" 
+                    id="addCampImageUrlInput" 
+                    class="form-control-input" 
+                    placeholder="https://example.com/poster.jpg" 
+                    style="direction: ltr; text-align: left; background: #ffffff;" 
+                  />
+                </div>
+                <div id="addCampImagePreviewBox" class="image-preview-wrapper" style="display: none; margin-top: 12px; width: 100%;">
+                  <div class="preview-badge-audience">پیش‌نمایش تصویر پوستر:</div>
+                  <div style="position: relative; max-width: 480px; margin-top: 6px;">
+                    <img id="addCampImagePreview" class="image-preview-element" src="" alt="پیش‌نمایش پوستر" style="max-height: 240px; width: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" />
+                  </div>
+                  <div style="margin-top: 10px;">
+                    <button type="button" class="btn-remove-preview-image" id="btnRemoveAddImage" style="position: static; padding: 6px 14px; font-size: 0.82rem;">حذف تصویر</button>
+                  </div>
+                </div>
+                <input type="hidden" id="addCampImage" />
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="form-field-label" for="addCampTotalShares">تعداد کل سهم‌ها *</label>
+                  <input type="number" id="addCampTotalShares" class="form-control-input" value="2000" min="1" required />
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-label" for="addCampSharePrice">قیمت هر سهم (تومان) *</label>
+                  <input type="number" id="addCampSharePrice" class="form-control-input" value="50000" min="1000" step="1000" required />
+                </div>
+              </div>
+
+              <div class="calculated-box-display">
+                <span class="calc-label">کل مبلغ هدف پویش:</span>
+                <span class="calc-val" id="addCampTargetAmountDisplay">۱۰۰,۰۰۰,۰۰۰ تومان</span>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="form-field-label" for="addCampStartDate">تاریخ شروع (شمسی)</label>
+                  <div class="datepicker-wrapper-group">
+                    <input 
+                      type="text" 
+                      id="addCampStartDate" 
+                      class="form-control-input datepicker-input-trigger" 
+                      placeholder="۱۴۰۳/۰۴/۰۱" 
+                      onclick="window.openPersianDatePicker('addCampStartDate')" 
+                      style="cursor: pointer; background: #ffffff;" 
+                    />
+                    <button 
+                      type="button" 
+                      class="btn-datepicker-addon" 
+                      onclick="window.openPersianDatePicker('addCampStartDate')" 
+                      title="تقویم شمسی"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-label" for="addCampEndDate">تاریخ پایان (شمسی)</label>
+                  <div class="datepicker-wrapper-group">
+                    <input 
+                      type="text" 
+                      id="addCampEndDate" 
+                      class="form-control-input datepicker-input-trigger" 
+                      placeholder="۱۴۰۳/۰۴/۱۵" 
+                      onclick="window.openPersianDatePicker('addCampEndDate')" 
+                      style="cursor: pointer; background: #ffffff;" 
+                    />
+                    <button 
+                      type="button" 
+                      class="btn-datepicker-addon" 
+                      onclick="window.openPersianDatePicker('addCampEndDate')" 
+                      title="تقویم شمسی"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- مشخصات رویداد / مراسم -->
+              <div class="form-optional-section-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-top: 24px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: #0891b2;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <strong style="font-size: 0.98rem; color: #0f172a;">مشخصات رویداد، مراسم و راه‌های ارتباطی</strong>
+                  </div>
+                  <span style="font-size: 0.78rem; background: #e2e8f0; color: #475569; padding: 2px 10px; border-radius: 999px; font-weight: 600;">اختیاری</span>
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-label" for="addCampEventLocation">
+                    <span>مکان مراسم یا محل توزیع نذورات</span>
+                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                  </label>
+                  <input type="text" id="addCampEventLocation" class="form-control-input" placeholder="مثال: تهران، مسجد جامع امام علی (ع)" />
+                </div>
+                <div class="form-grid-2">
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="addCampEventDate">
+                      <span>تاریخ برگزاری مراسم</span>
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                    </label>
+                    <input type="text" id="addCampEventDate" class="form-control-input" placeholder="مثال: روز عید غدیر خم" />
+                  </div>
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="addCampEventTime">
+                      <span>ساعت مراسم</span>
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                    </label>
+                    <input type="text" id="addCampEventTime" class="form-control-input" placeholder="مثال: از ساعت ۱۱:۰۰ تا ۱۴:۰۰" />
+                  </div>
+                </div>
+                <div class="form-grid-2">
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="addCampChannelLink">
+                      <span>لینک کانال اطلاع‌رسانی (ایتا، تلگرام و...)</span>
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                    </label>
+                    <input type="url" id="addCampChannelLink" class="form-control-input" placeholder="https://eitaa.com/your_channel" style="direction: ltr; text-align: left;" />
+                  </div>
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="addCampSocialLink">
+                      <span>لینک گروه یا صفحه مجازی (بله، روبیکا و...)</span>
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                    </label>
+                    <input type="url" id="addCampSocialLink" class="form-control-input" placeholder="https://ble.ir/your_group" style="direction: ltr; text-align: left;" />
+                  </div>
+                </div>
+                <div class="form-grid-2">
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="addCampContactPhone">
+                      <span>شماره تماس مسئول پویش</span>
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                    </label>
+                    <input type="tel" id="addCampContactPhone" class="form-control-input" placeholder="مثال: ۰۹۱۰۱۲۳۴۵۶۷" style="direction: ltr; text-align: left;" />
+                  </div>
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="addCampAdditionalNotes">
+                      <span>یادداشت یا نحوه توزیع</span>
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                    </label>
+                    <input type="text" id="addCampAdditionalNotes" class="form-control-input" placeholder="مثال: بسته‌بندی بهداشتی و توزیع در مناطق محروم" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label class="form-field-label" for="addCampStatus">وضعیت اولیه پویش</label>
+                <select id="addCampStatus" class="form-control-select">
+                  <option value="pending">به زودی (آماده‌سازی)</option>
+                  <option value="active" selected>فعال (قابل مشارکت)</option>
+                  <option value="completed">تکمیل شده</option>
+                </select>
+              </div>
+
+              <div style="display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;">
+                <button type="submit" class="btn-quick-action primary" id="btnSaveCampaign">
+                  ذخیره و انتشار پویش
+                </button>
+                <button type="button" class="btn-quick-action" onclick="navigateToSection('campaigns')">
+                  انصراف و بازگشت
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== بخش تراکنش‌ها و واریزی‌ها ==================== -->
+        <section id="section-payments" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major">مدیریت تراکنش‌ها و واریزی‌ها</h2>
+              <p class="section-desc-muted">لیست تمام مبالغ پرداختی، جستجو، فیلتر و خروجی فایل اکسل</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" class="btn-quick-action" id="btnExportPaymentsExcel" style="background: #047857; color: #ffffff; border-color: #047857;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>خروجی فایل اکسل (Excel)</span>
+              </button>
+              <button type="button" class="btn-quick-action primary" onclick="openAddPaymentModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>ثبت واریز دستی</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-card">
+            <!-- نوار فیلترهای پیشرفته -->
+            <div class="payments-advanced-filters-box" style="padding: 18px 20px; background: #f8fafc; border-bottom: 1px solid var(--border-color, #e2e8f0);">
+              <!-- ردیف فیلترهای وضعیت و بازه مبلغی -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: flex-end; margin-bottom: 14px;">
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">وضعیت پرداخت:</label>
+                  <select id="paymentFilterStatus" class="form-control-select">
+                    <option value="all">همه وضعیت‌ها</option>
+                    <option value="successful">موفق و تایید شده</option>
+                    <option value="pending">در انتظار پرداخت</option>
+                    <option value="failed">ناموفق</option>
+                    <option value="cancelled">لغو شده</option>
+                    <option value="verification_failed">عدم تایید</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">حداقل مبلغ (تومان):</label>
+                  <input type="number" id="paymentFilterMinAmount" class="form-control-input" placeholder="مثال: ۱۰۰۰۰" min="0" step="1000" style="padding: 8px 14px; font-size: 0.86rem; direction: ltr; text-align: right;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">حداکثر مبلغ (تومان):</label>
+                  <input type="number" id="paymentFilterMaxAmount" class="form-control-input" placeholder="مثال: ۲۰۰۰۰۰" min="0" step="1000" style="padding: 8px 14px; font-size: 0.86rem; direction: ltr; text-align: right;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">کد پیگیری:</label>
+                  <input type="text" id="paymentFilterTracking" class="form-control-input" placeholder="مثال: POY-123..." style="padding: 8px 14px; font-size: 0.86rem; direction: ltr;" />
+                </div>
+              </div>
+
+              <!-- ردیف جستجوی متنی و بازه‌های سریع -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: flex-end;">
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">نام و نام خانوادگی:</label>
+                  <input type="text" id="paymentFilterName" class="form-control-input" placeholder="جستجو بر اساس نام..." style="padding: 8px 14px; font-size: 0.86rem;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">شماره تلفن همراه:</label>
+                  <input type="text" id="paymentFilterPhone" class="form-control-input" placeholder="مثال: ۰۹۱۲..." style="padding: 8px 14px; font-size: 0.86rem; direction: ltr;" />
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" id="btnResetPaymentFilters" class="btn-quick-action" style="flex: 1; padding: 8px 14px; font-size: 0.86rem; justify-content: center;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>پاکسازی فیلترها</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- دکمه‌های انتخاب سریع بازه مبلغی -->
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e2e8f0;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: #64748b;">انتخاب سریع بازه مبلغی:</span>
+                <button type="button" class="btn-row-action" data-amount-range="all" style="font-size: 0.78rem; padding: 4px 10px;">همه مبالغ</button>
+                <button type="button" class="btn-row-action" data-amount-range="10k-200k" style="font-size: 0.78rem; padding: 4px 10px;">۱۰,۰۰۰ تا ۲۰۰,۰۰۰ تومان</button>
+                <button type="button" class="btn-row-action" data-amount-range="200k-500k" style="font-size: 0.78rem; padding: 4px 10px;">۲۰۰,۰۰۰ تا ۵۰۰,۰۰۰ تومان</button>
+                <button type="button" class="btn-row-action" data-amount-range="500k-plus" style="font-size: 0.78rem; padding: 4px 10px;">بیش از ۵۰۰,۰۰۰ تومان</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>کد پیگیری</th>
+                    <th>نام مشارکت‌کننده</th>
+                    <th>شماره تماس</th>
+                    <th>پویش</th>
+                    <th>تعداد سهم</th>
+                    <th>مبلغ (تومان)</th>
+                    <th>تاریخ ثبت</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== بخش گزارش عملکرد ==================== -->
+        <section id="section-reports" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major">گزارشات و عملکرد مالی</h2>
+              <p class="section-desc-muted">خلاصه وضعیت مالی، تراکنش‌ها و مشارکت‌کنندگان به تفکیک پویش‌ها</p>
+            </div>
+            <button type="button" class="btn-quick-action" onclick="window.print()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>چاپ گزارش (Print)</span>
+            </button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            <div style="background: #ffffff; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px;">
+              <div style="font-size: 0.82rem; color: #166534; font-weight: 700;">کل تراکنش‌های موفق</div>
+              <div style="font-size: 1.6rem; font-weight: 900; color: #15803d; margin-top: 4px;" id="reportCountSuccessful">۰</div>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #fef08a; border-radius: 12px; padding: 18px;">
+              <div style="font-size: 0.82rem; color: #854d0e; font-weight: 700;">تراکنش‌های در انتظار</div>
+              <div style="font-size: 1.6rem; font-weight: 900; color: #a16207; margin-top: 4px;" id="reportCountPending">۰</div>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #fecaca; border-radius: 12px; padding: 18px;">
+              <div style="font-size: 0.82rem; color: #991b1b; font-weight: 700;">تراکنش‌های لغوشده یا ناموفق</div>
+              <div style="font-size: 1.6rem; font-weight: 900; color: #dc2626; margin-top: 4px;" id="reportCountCancelled">۰</div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-toolbar">
+              <h3 style="font-size: 1rem; font-weight: 800;">آمار به تفکیک پویش‌ها</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>پویش</th>
+                    <th>کل سهم</th>
+                    <th>سهم واریز شده</th>
+                    <th>سهم باقیمانده</th>
+                    <th>مبلغ هدف</th>
+                    <th>مبلغ جذب شده</th>
+                    <th>مبلغ کسری</th>
+                    <th>درصد پیشرفت</th>
+                    <th>تعداد واریزها</th>
+                    <th>تعداد مشارکت‌کنندگان</th>
+                  </tr>
+                </thead>
+                <tbody id="reportsCampaignsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== بخش کاربران ==================== -->
+        <section id="section-users" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major">کاربران</h2>
+              <p class="section-desc-muted">مشخصات اهداکنندگان و مشارکت‌کنندگان با پرداخت موفق و سوابق واریزی‌ها</p>
+            </div>
+            <div class="section-header-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" id="btnExportUsersExcel" class="btn-quick-action primary" title="خروجی اکسل از لیست کاربران">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>خروجی اکسل</span>
+              </button>
+              <button type="button" id="btnRefreshUsers" class="btn-quick-action" title="بروزرسانی لیست">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                <span>بروزرسانی لیست</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- کارت‌های آمار کاربران -->
+          <div class="stats-grid-dashboard" style="margin-bottom: 24px;">
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">کل کاربران با پرداخت موفق</span>
+                <span class="stat-number-bold" id="usersStatTotal">۰</span>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-blue">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">مشارکت‌کنندگان فعال</span>
+                <span class="stat-number-bold" style="color: #047857;" id="usersStatActive">۰</span>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-emerald">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">کاربران گمنام</span>
+                <span class="stat-number-bold" style="color: #7c3aed;" id="usersStatAnonymous">۰</span>
+              </div>
+              <div class="stat-icon-wrapper" style="background: #f5f3ff; color: #7c3aed;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card-dashboard">
+              <div class="stat-info-col">
+                <span class="stat-label-quiet">مجموع مبالغ واریزی</span>
+                <span class="stat-number-bold" style="color: #0891b2;" id="usersStatTotalAmount">۰</span>
+              </div>
+              <div class="stat-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                  <line x1="12" y1="6" x2="12" y2="8"></line>
+                  <line x1="12" y1="16" x2="12" y2="18"></line>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- فیلترها و جستجوی کاربران -->
+          <div class="table-card">
+            <div class="payments-advanced-filters-box" style="padding: 18px 20px; background: #f8fafc; border-bottom: 1px solid var(--border-color, #e2e8f0);">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: flex-end;">
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">جستجوی نام یا تلفن همراه:</label>
+                  <input type="text" id="usersFilterSearch" class="form-control-input" placeholder="نام، شماره همراه..." style="direction: rtl;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">نوع مشارکت (گمنامی):</label>
+                  <select id="usersFilterAnonymous" class="form-control-select">
+                    <option value="all">همه کاربران (گمنام و با نام)</option>
+                    <option value="anonymous">کاربران گمنام</option>
+                    <option value="false">با نام واقعی</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">از تاریخ عضویت:</label>
+                  <input type="text" id="usersFilterFromDate" class="form-control-input" placeholder="۱۴۰۳/۰۱/۰۱" style="direction: ltr; text-align: right;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">تا تاریخ عضویت:</label>
+                  <input type="text" id="usersFilterToDate" class="form-control-input" placeholder="۱۴۰۳/۱۲/۲۹" style="direction: ltr; text-align: right;" />
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" id="btnResetUsersFilters" class="btn-quick-action" style="background: #f1f5f9; color: #475569; width: 100%; justify-content: center;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                      <path d="M3 3v5h5"></path>
+                    </svg>
+                    <span>ریست فیلترها</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- جدول لیست کاربران -->
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ردیف</th>
+                    <th>نام و نام خانوادگی</th>
+                    <th>شماره تلفن همراه</th>
+                    <th>تاریخ عضویت</th>
+                    <th>وضعیت پرداخت</th>
+                    <th>نوع مشارکت</th>
+                    <th>مجموع مشارکت</th>
+                    <th>عملیات</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- ردیف‌ها پویا رندر می‌شوند -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- صفحه‌بندی -->
+            <div id="usersPaginationContainer" class="table-footer-pagination" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid var(--border-color, #e2e8f0); flex-wrap: wrap; gap: 10px;">
+              <div style="font-size: 0.84rem; color: #64748b;" id="usersPaginationInfo">نمایش ۰ کاربر</div>
+              <div style="display: flex; gap: 6px; align-items: center;" id="usersPaginationControls"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== بخش لاگ‌ها و رویدادهای سیستم ==================== -->
+        <section id="section-logs" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major">لاگ‌ها و رویدادهای سیستم</h2>
+              <p class="section-desc-muted">سیاهه امنیتی، ثبت وقایع و تاریخچه فعالیت‌های انجام‌شده در سامانه</p>
+            </div>
+            <div class="section-header-actions">
+              <button type="button" id="btnRefreshLogs" class="btn-quick-action" title="بروزرسانی لاگ‌ها">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                <span>بروزرسانی لاگ‌ها</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- فیلترها و جستجوی لاگ‌ها -->
+          <div class="table-card">
+            <div class="payments-advanced-filters-box" style="padding: 18px 20px; background: #f8fafc; border-bottom: 1px solid var(--border-color, #e2e8f0);">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">جستجو در رخدادها:</label>
+                  <input type="text" id="logsFilterSearch" class="form-control-input" placeholder="توضیحات، هدف، انجام‌دهنده..." style="direction: rtl;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">نوع عملیات:</label>
+                  <select id="logsFilterActionType" class="form-control-select">
+                    <option value="all">همه عملیات‌ها</option>
+                    <option value="ورود مدیر">ورود مدیر</option>
+                    <option value="پرداخت موفق">پرداخت موفق</option>
+                    <option value="پرداخت ناموفق">پرداخت ناموفق</option>
+                    <option value="لغو پرداخت">لغو پرداخت</option>
+                    <option value="ثبت پرداخت دستی">ثبت پرداخت دستی</option>
+                    <option value="ثبت کاربر جدید">ثبت کاربر جدید</option>
+                    <option value="تأیید کاربر">تأیید کاربر</option>
+                    <option value="رد کاربر">رد کاربر</option>
+                    <option value="تغییر نمایش عمومی">تغییر نمایش عمومی</option>
+                    <option value="حذف کاربر">حذف کاربر</option>
+                    <option value="ایجاد پویش">ایجاد پویش</option>
+                    <option value="ویرایش پویش">ویرایش پویش</option>
+                    <option value="تغییر وضعیت پویش">تغییر وضعیت پویش</option>
+                    <option value="حذف پویش">حذف پویش</option>
+                    <option value="ویرایش قوانین و مقررات">ویرایش قوانین و مقررات</option>
+                    <option value="تنظیمات درگاه">تنظیمات درگاه</option>
+                    <option value="لغو تغییرات (Undo)">لغو تغییرات (Undo)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">انجام‌دهنده:</label>
+                  <select id="logsFilterActor" class="form-control-select">
+                    <option value="all">همه انجام‌دهندگان</option>
+                    <option value="مدیر سیستم">مدیر سیستم</option>
+                    <option value="سیستم">سیستم خودکار</option>
+                    <option value="درگاه شاپرک">درگاه شاپرک</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">از تاریخ:</label>
+                  <input type="text" id="logsFilterFromDate" class="form-control-input" placeholder="۱۴۰۳/۰۱/۰۱" style="direction: ltr; text-align: right;" />
+                </div>
+                <div>
+                  <label class="form-field-label" style="font-size: 0.8rem; margin-bottom: 4px;">تا تاریخ:</label>
+                  <input type="text" id="logsFilterToDate" class="form-control-input" placeholder="۱۴۰۳/۱۲/۲۹" style="direction: ltr; text-align: right;" />
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" id="btnResetLogsFilters" class="btn-quick-action" style="background: #f1f5f9; color: #475569; width: 100%; justify-content: center;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                      <path d="M3 3v5h5"></path>
+                    </svg>
+                    <span>ریست فیلترها</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- جدول رخدادهای لاگ -->
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">ردیف</th>
+                    <th style="width: 140px;">تاریخ و زمان</th>
+                    <th style="width: 140px;">نوع عملیات</th>
+                    <th style="width: 120px;">انجام‌دهنده</th>
+                    <th style="width: 130px;">هدف / کاربر</th>
+                    <th>شرح و جزئیات رخداد</th>
+                    <th style="width: 90px;">وضعیت</th>
+                  </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                  <!-- ردیف‌های لاگ پویا رندر می‌شوند -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- صفحه‌بندی لاگ‌ها -->
+            <div id="logsPaginationContainer" class="table-footer-pagination" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid var(--border-color, #e2e8f0); flex-wrap: wrap; gap: 10px;">
+              <div style="font-size: 0.84rem; color: #64748b;" id="logsPaginationInfo">نمایش ۰ لاگ</div>
+              <div style="display: flex; gap: 6px; align-items: center;" id="logsPaginationControls"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== بخش تنظیمات ==================== -->
+        <section id="section-settings" class="admin-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title-major">تنظیمات درگاه و دیتابیس</h2>
+              <p class="section-desc-muted">پیکربندی درگاه پرداخت آنلاین و ساختار جداول پایگاه داده</p>
+            </div>
+          </div>
+
+          <!-- تنظیمات درگاه پرداخت -->
+          <div class="form-card" style="margin-bottom: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">درگاه پرداخت بانکی (Payment Gateway)</h3>
+                <p style="font-size: 0.85rem; color: #64748b; margin-top: 2px;">
+                  درگاه فعال برای دریافت مشارکت‌های آنلاین را انتخاب نمایید:
+                </p>
+              </div>
+              <div id="gatewayActiveStatusBadge" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #ecfdf5; color: #047857; font-size: 0.82rem; font-weight: 700;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+                <span id="gatewayActiveStatusText">درگاه فعال است</span>
+              </div>
+            </div>
+            <form id="formPaymentGatewaySettings" action="javascript:void(0);">
+              <div class="form-grid-2">
+                <div class="form-field-group">
+                  <label class="form-field-label" for="settingActiveGateway">درگاه پرداخت فعال</label>
+                  <select id="settingActiveGateway" class="form-control-select">
+                    <option value="test_gateway">شاپرک (شبیه‌ساز تستی)</option>
+                    <option value="zarinpal">زرین‌پال (ZarinPal)</option>
+                    <option value="idpay">آیدی پی (IDPay)</option>
+                    <option value="zibal">زیبال (Zibal)</option>
+                    <option value="nextpay">نکست پی (NextPay)</option>
+                    <option value="behpardakht">به‌پرداخت ملت (Mellat)</option>
+                    <option value="saman">سامان کیش (Saman)</option>
+                    <option value="parsian">تجارت الکترونیک پارسیان</option>
+                    <option value="pasargad">بانک پاسارگاد (Pasargad)</option>
+                  </select>
+                </div>
+                <div class="form-field-group">
+                  <label class="form-field-label" for="settingGatewayEnabled">وضعیت درگاه</label>
+                  <select id="settingGatewayEnabled" class="form-control-select">
+                    <option value="true">فعال (آماده دریافت پرداخت)</option>
+                    <option value="false">غیرفعال (توقف موقت پرداخت‌ها)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-field-group">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #1e293b;">
+                  <input type="checkbox" id="settingGatewaySandbox" checked style="accent-color: #0891b2;" />
+                  <span>حالت آزمایشی (Sandbox Mode)</span>
+                </label>
+                <div style="font-size: 0.78rem; color: #64748b; margin-top: 4px;">
+                  در صورت فعال بودن، تراکنش‌ها از طریق شبیه‌ساز امن تست می‌شوند.
+                </div>
+              </div>
+              <div id="gatewayCredentialsContainer" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+                <div class="form-field-group">
+                  <label class="form-field-label" for="settingGatewayMerchantId" id="labelGatewayMerchantId">کد مرچنت درگاه (Merchant ID)</label>
+                  <input type="text" id="settingGatewayMerchantId" class="form-control-input" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="direction: ltr;" />
+                </div>
+                <div class="form-field-group" id="groupGatewayApiKey">
+                  <label class="form-field-label" for="settingGatewayApiKey">کلید API خصوصی (API Key / Secret)</label>
+                  <input type="password" id="settingGatewayApiKey" class="form-control-input" placeholder="کلید محرمانه API درگاه" style="direction: ltr;" autocomplete="new-password" />
+                  <div style="font-size: 0.76rem; color: #64748b; margin-top: 4px;">این کلید به صورت امن در سرور نگهداری می‌شود.</div>
+                </div>
+                <div class="form-field-group" id="groupGatewayTerminalId" style="display: none;">
+                  <label class="form-field-label" for="settingGatewayTerminalId">کد ترمینال (Terminal ID)</label>
+                  <input type="text" id="settingGatewayTerminalId" class="form-control-input" placeholder="مثال: 12345678" style="direction: ltr;" />
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button type="submit" id="btnSaveGatewaySettings" class="btn-quick-action primary">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  <span>ذخیره تنظیمات درگاه</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ==================== ویرایشگر قوانین و مقررات پویش ==================== -->
+          <div class="form-card" style="margin-bottom: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">ویرایش قوانین و مقررات پویش</h3>
+                  <span id="termsUnsavedBadge" style="display: none; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.74rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;">
+                    تغییرات ذخیره‌نشده
+                  </span>
+                </div>
+                <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">
+                  این متن در وب‌سایت عمومی هنگام کلیک روی «قوانین و مقررات» به مشارکت‌کنندگان نمایش داده می‌شود و بلافاصله پس از ذخیره فعال می‌گردد.
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" id="btnTabTermsEditor" class="btn-quick-action primary" style="font-size: 0.82rem; padding: 6px 14px;">
+                  ویرایشگر متن
+                </button>
+                <button type="button" id="btnTabTermsPreview" class="btn-quick-action" style="font-size: 0.82rem; padding: 6px 14px; background: #f1f5f9; color: #475569;">
+                  پیش‌نمایش در سایت
+                </button>
+              </div>
+            </div>
+
+            <!-- نوار ابزار قالب‌بندی سریع (Formatting Toolbar) -->
+            <div id="termsToolbar" style="display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px 8px 0 0; border-bottom: none;">
+              <button type="button" class="btn-terms-tool" data-tool="h4" title="افزودن سرتیتر">
+                <strong>H4 سرتیتر</strong>
+              </button>
+              <button type="button" class="btn-terms-tool" data-tool="bold" title="متن ضخیم">
+                <strong>B متن برجسته</strong>
+              </button>
+              <button type="button" class="btn-terms-tool" data-tool="list" title="افزودن فهرست گلوله‌ای">
+                <span>• فهرست</span>
+              </button>
+              <button type="button" class="btn-terms-tool" data-tool="p" title="پاراگراف جدید">
+                <span>¶ پاراگراف</span>
+              </button>
+              <button type="button" class="btn-terms-tool" data-tool="notice" title="کادر تماس و پشتیبانی">
+                <span>کادر راهنما</span>
+              </button>
+              <button type="button" class="btn-terms-tool" id="btnTermsResetTemplate" title="بازنشانی به قالب استاندارد" style="margin-right: auto; color: #dc2626;">
+                <span>بازنشانی پیش‌فرض</span>
+              </button>
+            </div>
+
+            <!-- فضای ویرایشگر -->
+            <div id="termsEditorContainer" style="position: relative;">
+              <textarea 
+                id="settingTermsContent" 
+                class="form-control-textarea" 
+                rows="11" 
+                style="border-radius: 0 0 8px 8px; font-family: inherit; font-size: 0.9rem; line-height: 1.8; direction: rtl; text-align: right; resize: vertical;"
+                placeholder="متن کامل قوانین، تذکرات مالی، نحوه استرداد وجه و ضوابط شرعی پویش را وارد فرمایید..."
+              ></textarea>
+            </div>
+
+            <!-- پیش‌نمایش زنده قوانین (Preview Mode) -->
+            <div id="termsPreviewContainer" style="display: none; padding: 22px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.92rem; line-height: 1.9; color: #334155; max-height: 380px; overflow-y: auto;">
+              <!-- به صورت پویا با متن قوانین پر می‌شود -->
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: center; margin-top: 16px; flex-wrap: wrap;">
+              <button type="button" id="btnSaveTermsContent" class="btn-quick-action primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span>ذخیره تغییرات قوانین</span>
+              </button>
+              <button type="button" id="btnCancelTermsContent" class="btn-quick-action" style="background: #f1f5f9; color: #475569;">
+                <span>لغو تغییرات ذخیره‌نشده</span>
+              </button>
+              <span id="termsLastUpdatedText" style="font-size: 0.8rem; color: #94a3b8; margin-right: auto;"></span>
+            </div>
+          </div>
+
+          <!-- تست اتصال و ساختار دیتابیس -->
+          <div class="form-card" style="margin-bottom: 28px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 14px;">وضعیت اتصال به API</h3>
+            <div class="form-field-group">
+              <label class="form-field-label" for="settingsApiUrl">آدرس پایه API (API Base URL)</label>
+              <input type="text" id="settingsApiUrl" class="form-control-input" placeholder="/api" style="direction: ltr;" />
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-label" for="settingsUploadsUrl">پوشه آپلودها (Uploads URL)</label>
+              <input type="text" id="settingsUploadsUrl" class="form-control-input" placeholder="/uploads/campaigns" style="direction: ltr;" />
+            </div>
+            <div id="databaseConnectionStatus" style="margin-bottom: 16px; font-size: 0.88rem;"></div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button type="button" id="btnTestDatabaseConnection" class="btn-quick-action primary">
+                تست ارتباط با API سرور
+              </button>
+            </div>
+          </div>
+
+          <!-- ساختار SQL برای هاست -->
+          <div class="form-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="font-size: 1.1rem; font-weight: 800;">اسکریپت دیتابیس MySQL (جهت استفاده در هاست cPanel)</h3>
+                <p style="font-size: 0.84rem; color: #64748b; margin-top: 2px;">
+                  در صورت انتقال به هاست اختصاصی، می‌توانید کد زیر را در phpMyAdmin ایمپورت نمایید:
+                </p>
+              </div>
+              <button type="button" id="btnCopySqlScript" class="btn-quick-action primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>کپی اسکریپت MySQL (database.sql)</span>
+              </button>
+            </div>
+            <pre class="sql-code-block" id="mysqlSqlCodeDisplay"></pre>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       مودال‌های مدیریت (ویرایش پویش، تقویم شمسی، واریز دستی، تایید خروج)
+       ========================================================================== -->
+  <!-- مودال ویرایش پویش -->
+  <div class="admin-modal-backdrop" id="modalEditCampaign">
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">ویرایش مشخصات پویش</h3>
+        <button type="button" class="btn-close-modal" data-close-admin-modal>&times;</button>
+      </div>
+      <form id="formEditCampaign" action="javascript:void(0);">
+        <div class="admin-modal-body">
+          <input type="hidden" id="editCampId" />
+          <div class="form-field-group">
+            <label class="form-field-label" for="editCampTitle">عنوان پویش *</label>
+            <input type="text" id="editCampTitle" class="form-control-input" required />
+          </div>
+          <div class="form-field-group">
+            <label class="form-field-label" for="editCampDesc">توضیحات</label>
+            <textarea id="editCampDesc" class="form-control-textarea" rows="3"></textarea>
+          </div>
+
+          <div class="form-field-group" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <label class="form-field-label" style="font-weight: 800; color: #047857; margin-bottom: 6px;">تصویر پوستر پویش</label>
+            <div style="margin-bottom: 12px;">
+              <label for="editCampImageFile" style="display: block; font-size: 0.82rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                آپلود تصویر جدید از فایل
+              </label>
+              <input 
+                type="file" 
+                id="editCampImageFile" 
+                accept="image/*" 
+                class="form-control-input" 
+                style="padding: 8px 12px; cursor: pointer; background: #ffffff; border: 2px dashed #047857;" 
+              />
+            </div>
+            <div style="margin-bottom: 12px;">
+              <label for="editCampImageUrlInput" style="display: block; font-size: 0.82rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                یا آدرس اینترنتی تصویر
+              </label>
+              <input 
+                type="url" 
+                id="editCampImageUrlInput" 
+                class="form-control-input" 
+                placeholder="https://example.com/poster.jpg" 
+                style="direction: ltr; text-align: left; background: #ffffff;" 
+              />
+            </div>
+            <div id="editCampImagePreviewBox" class="image-preview-wrapper" style="display: none; margin-top: 10px; width: 100%;">
+              <div class="preview-badge-audience">پیش‌نمایش تصویر:</div>
+              <div style="position: relative; max-width: 440px; margin-top: 6px;">
+                <img id="editCampImagePreview" class="image-preview-element" src="" alt="پیش‌نمایش پوستر" style="max-height: 200px; width: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1;" />
+              </div>
+              <div style="margin-top: 8px;">
+                <button type="button" class="btn-remove-preview-image" id="btnRemoveEditImage" style="position: static; padding: 6px 12px; font-size: 0.82rem;">حذف تصویر</button>
+              </div>
+            </div>
+            <input type="hidden" id="editCampImage" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field-group">
+              <label class="form-field-label" for="editCampTotalShares">کل سهم‌ها *</label>
+              <input type="number" id="editCampTotalShares" class="form-control-input" min="1" required />
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-label" for="editCampSharePrice">قیمت هر سهم (تومان) *</label>
+              <input type="number" id="editCampSharePrice" class="form-control-input" min="1000" step="1000" required />
+            </div>
+          </div>
+
+          <div class="calculated-box-display">
+            <span class="calc-label">مبلغ هدف پویش:</span>
+            <span class="calc-val" id="editCampTargetAmountDisplay">۰ تومان</span>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field-group">
+              <label class="form-field-label" for="editCampStartDate">تاریخ شروع (شمسی)</label>
+              <div class="datepicker-wrapper-group">
+                <input 
+                  type="text" 
+                  id="editCampStartDate" 
+                  class="form-control-input datepicker-input-trigger" 
+                  onclick="window.openPersianDatePicker('editCampStartDate')" 
+                  style="cursor: pointer; background: #fff;" 
+                />
+                <button 
+                  type="button" 
+                  class="btn-datepicker-addon" 
+                  onclick="window.openPersianDatePicker('editCampStartDate')" 
+                  title="تقویم شمسی"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-label" for="editCampEndDate">تاریخ پایان (شمسی)</label>
+              <div class="datepicker-wrapper-group">
+                <input 
+                  type="text" 
+                  id="editCampEndDate" 
+                  class="form-control-input datepicker-input-trigger" 
+                  onclick="window.openPersianDatePicker('editCampEndDate')" 
+                  style="cursor: pointer; background: #fff;" 
+                />
+                <button 
+                  type="button" 
+                  class="btn-datepicker-addon" 
+                  onclick="window.openPersianDatePicker('editCampEndDate')" 
+                  title="تقویم شمسی"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-optional-section-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-top: 18px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: #0891b2;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <strong style="font-size: 0.95rem; color: #0f172a;">اطلاعات رویداد و راه‌های ارتباطی</strong>
+              </div>
+              <span style="font-size: 0.76rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 999px; font-weight: 600;">اختیاری</span>
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-label" for="editCampEventLocation">
+                <span>مکان مراسم</span>
+                <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+              </label>
+              <input type="text" id="editCampEventLocation" class="form-control-input" placeholder="مکان برگزاری" />
+            </div>
+            <div class="form-grid-2">
+              <div class="form-field-group">
+                <label class="form-field-label" for="editCampEventDate">
+                  <span>تاریخ مراسم</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                </label>
+                <input type="text" id="editCampEventDate" class="form-control-input" placeholder="مثال: روز عید غدیر" />
+              </div>
+              <div class="form-field-group">
+                <label class="form-field-label" for="editCampEventTime">
+                  <span>ساعت مراسم</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                </label>
+                <input type="text" id="editCampEventTime" class="form-control-input" placeholder="مثال: ۱۱:۰۰ تا ۱۴:۰۰" />
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-field-group">
+                <label class="form-field-label" for="editCampChannelLink">
+                  <span>لینک کانال (ایتا و...)</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                </label>
+                <input type="url" id="editCampChannelLink" class="form-control-input" placeholder="https://eitaa.com/channel" style="direction: ltr; text-align: left;" />
+              </div>
+              <div class="form-field-group">
+                <label class="form-field-label" for="editCampSocialLink">
+                  <span>لینک گروه یا صفحه مجازی</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                </label>
+                <input type="url" id="editCampSocialLink" class="form-control-input" placeholder="https://ble.ir/group" style="direction: ltr; text-align: left;" />
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-field-group">
+                <label class="form-field-label" for="editCampContactPhone">
+                  <span>شماره تماس</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                </label>
+                <input type="tel" id="editCampContactPhone" class="form-control-input" placeholder="۰۹۱۰..." style="direction: ltr; text-align: left;" />
+              </div>
+              <div class="form-field-group">
+                <label class="form-field-label" for="editCampAdditionalNotes">
+                  <span>یادداشت و نحوه توزیع</span>
+                  <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(اختیاری)</span>
+                </label>
+                <input type="text" id="editCampAdditionalNotes" class="form-control-input" placeholder="نکات تکمیلی..." />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-field-group">
+            <label class="form-field-label" for="editCampStatus">وضعیت پویش</label>
+            <select id="editCampStatus" class="form-control-select">
+              <option value="pending">به زودی</option>
+              <option value="active">فعال</option>
+              <option value="completed">تکمیل شده</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="submit" id="btnSaveEditCampaign" class="btn-quick-action primary">ذخیره تغییرات</button>
+          <button type="button" class="btn-quick-action" data-close-admin-modal>انصراف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- مودال تقویم شمسی تعاملی -->
+  <div class="admin-modal-backdrop" id="modalPersianDatePicker" style="z-index: 1100;">
+    <div class="admin-modal-box" style="max-width: 400px;">
+      <div class="admin-modal-header" style="padding: 16px 20px;">
+        <h3 class="admin-modal-title" style="font-size: 1rem; color: #047857;">انتخاب تاریخ شمسی</h3>
+        <button type="button" class="btn-close-modal" id="btnCloseDatePicker">&times;</button>
+      </div>
+      <div class="admin-modal-body" style="padding: 18px 20px;">
+        <div class="datepicker-header-bar">
+          <button type="button" id="dpBtnPrevMonth" class="dp-nav-btn">&larr; ماه قبل</button>
+          <div style="display: flex; gap: 6px;">
+            <select id="dpSelectMonth" class="datepicker-select-control">
+              <option value="1">فروردین</option>
+              <option value="2">اردیبهشت</option>
+              <option value="3">خرداد</option>
+              <option value="4">تیر</option>
+              <option value="5">مرداد</option>
+              <option value="6">شهریور</option>
+              <option value="7">مهر</option>
+              <option value="8">آبان</option>
+              <option value="9">آذر</option>
+              <option value="10">دی</option>
+              <option value="11">بهمن</option>
+              <option value="12">اسفند</option>
+            </select>
+            <select id="dpSelectYear" class="datepicker-select-control">
+              <option value="1402">۱۴۰۲</option>
+              <option value="1403">۱۴۰۳</option>
+              <option value="1404" selected>۱۴۰۴</option>
+              <option value="1405">۱۴۰۵</option>
+              <option value="1406">۱۴۰۶</option>
+              <option value="1407">۱۴۰۷</option>
+              <option value="1408">۱۴۰۸</option>
+            </select>
+          </div>
+          <button type="button" id="dpBtnNextMonth" class="dp-nav-btn">ماه بعد &rarr;</button>
+        </div>
+        <div class="datepicker-quick-chips">
+          <button type="button" class="datepicker-quick-btn" data-quick-date="today">امروز</button>
+          <button type="button" class="datepicker-quick-btn" data-quick-date="plus10">+۱۰ روز</button>
+          <button type="button" class="datepicker-quick-btn" data-quick-date="plus20">+۲۰ روز</button>
+          <button type="button" class="datepicker-quick-btn" data-quick-date="plus30">+۱ ماه</button>
+          <button type="button" class="datepicker-quick-btn" data-quick-date="plus60">+۲ ماه</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.76rem; font-weight: 700; color: #64748b; margin-bottom: 8px;">
+          <span>ش</span><span>ی</span><span>د</span><span>س</span><span>چ</span><span>پ</span><span style="color: #dc2626;">ج</span>
+        </div>
+        <div class="datepicker-grid-days" id="dpDaysGrid"></div>
+      </div>
+      <div class="admin-modal-footer" style="padding: 10px 20px; justify-content: center;">
+        <span style="font-size: 0.78rem; color: #64748b;">روی روز مورد نظر کلیک نمایید</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال تایید خروج -->
+  <div class="admin-modal-backdrop" id="modalConfirmLogout" style="z-index: 1200;">
+    <div class="admin-modal-box" style="max-width: 380px; text-align: center;">
+      <div class="admin-modal-header" style="justify-content: center; border-bottom: none; padding-bottom: 4px;">
+        <h3 class="admin-modal-title" style="color: #dc2626; font-size: 1.05rem;">تایید خروج از حساب مدیریت</h3>
+      </div>
+      <div class="admin-modal-body" style="padding: 16px 20px 20px;">
+        <p style="font-size: 0.9rem; color: #475569; margin-bottom: 20px; line-height: 1.6;">آیا مطمئن هستید که می‌خواهید از پنل مدیریت خارج شوید؟</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button type="button" id="btnConfirmLogoutYes" class="btn-quick-action" style="background: #dc2626; color: #ffffff; border-color: #dc2626;">بله، خروج</button>
+          <button type="button" class="btn-quick-action" data-close-admin-modal>انصراف</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال ثبت واریز دستی -->
+  <div class="admin-modal-backdrop" id="modalManualPayment">
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="modalManualPaymentTitle">ثبت پرداخت دستی / نقدی</h3>
+        <button type="button" class="btn-close-modal" data-close-admin-modal>&times;</button>
+      </div>
+      <form id="formManualPayment" action="javascript:void(0);">
+        <div class="admin-modal-body">
+          <div class="form-field-group">
+            <label class="form-field-label" for="manualPaymentCampaignSelect">انتخاب پویش *</label>
+            <select id="manualPaymentCampaignSelect" class="form-control-select" required></select>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field-group">
+              <label class="form-field-label" for="manualPaymentPayerName">نام واریز کننده (یا ناشناس)</label>
+              <input type="text" id="manualPaymentPayerName" class="form-control-input" placeholder="نام خیر یا ناشناس" required />
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-label" for="manualPaymentPhone">شماره همراه</label>
+              <input type="tel" id="manualPaymentPhone" class="form-control-input" placeholder="۰۹۱۲..." style="direction: ltr;" />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field-group">
+              <label class="form-field-label" for="manualPaymentShares">تعداد سهم *</label>
+              <input type="number" id="manualPaymentShares" class="form-control-input" min="1" value="1" required />
+            </div>
+            <div class="form-field-group">
+              <label class="form-field-label" for="manualPaymentAmount">مبلغ کل (تومان) *</label>
+              <input type="number" id="manualPaymentAmount" class="form-control-input" min="1000" step="1000" required />
+            </div>
+          </div>
+          <div class="form-field-group">
+            <label class="form-field-label" for="manualPaymentTrackingCode">کد پیگیری *</label>
+            <input type="text" id="manualPaymentTrackingCode" class="form-control-input" style="direction: ltr;" required />
+          </div>
+          <div class="form-field-group">
+            <label class="form-field-label" for="manualPaymentDesc">توضیحات و نیت</label>
+            <textarea id="manualPaymentDesc" class="form-control-textarea" rows="2" placeholder="نیت پرداخت..."></textarea>
+          </div>
+          <div class="form-field-group">
+            <label class="form-field-label" for="manualPaymentStatus">وضعیت پرداخت</label>
+            <select id="manualPaymentStatus" class="form-control-select">
+              <option value="successful">موفق (تایید شده)</option>
+              <option value="pending">در انتظار تایید</option>
+              <option value="cancelled">لغو شده</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="submit" class="btn-quick-action primary">ثبت و ذخیره</button>
+          <button type="button" class="btn-quick-action" data-close-admin-modal>انصراف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- مودال جزئیات پویش -->
+  <div class="admin-modal-backdrop" id="modalCampaignDetails">
+    <div class="admin-modal-box" style="max-width: 720px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">جزئیات پویش و آمار</h3>
+        <button type="button" class="btn-close-modal" data-close-admin-modal>&times;</button>
+      </div>
+      <div class="admin-modal-body" id="campaignDetailsModalBody"></div>
+      <div class="admin-modal-footer">
+        <button type="button" class="btn-quick-action" data-close-admin-modal>بستن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- مودال مشخصات و تاریخچه تراکنش‌های کاربر -->
+  <div class="admin-modal-backdrop" id="modalUserDetails">
+    <div class="admin-modal-box" style="max-width: 760px;">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span id="modalUserDetailsTitle">مشخصات کاربر و تاریخچه مشارکت‌ها</span>
+        </h3>
+        <button type="button" class="btn-close-modal" data-close-admin-modal>&times;</button>
+      </div>
+      <div class="admin-modal-body" id="modalUserDetailsBody">
+        <!-- مشخصات کاربر و جدول تراکنش‌ها پویا پر می‌شود -->
+      </div>
+      <div class="admin-modal-footer">
+        <div id="modalUserActionButtons" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+        <button type="button" class="btn-quick-action" data-close-admin-modal style="margin-right: auto;">بستن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- کانتینر توست و پاپ‌آپ‌های وضعیت عملیات مدیریت -->
+  <div class="toast-container" id="adminToastContainer"></div>
+  <div class="admin-popup-container" id="adminPopupContainer"></div>
+
+  <!-- کتابخانه اکسل برای خروجی -->
+  <script src="/js/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- اسکریپت‌های پنل مدیریت -->
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "سامانه مدیریت پویش نذورات و مشارکت",
+  "description": "سامانه جامع مدیریت و مشارکت پویش‌های خیریه، نذورات، ثبت سهم، درگاه پرداخت و پنل مدیریت پیشرفته",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

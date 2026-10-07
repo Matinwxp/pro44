@@ -1,0 +1,60 @@
+# ==============================================================================
+# پیکربندی سرور آپاچی برای هاست‌های cPanel / DirectAdmin: .htaccess
+# ==============================================================================
+
+# جلوگیری از مشاهده لیست فایل‌های دایرکتوری
+Options -Indexes -MultiViews
+
+# ممانعت از دانلود فایل‌های محرمانه، اسکریپت SQL دیتابیس و تنظیمات
+<FilesMatch "^(\.env|\.git.*|database\.sql|composer\.(json|lock)|package(-lock)?\.json|tsconfig\.json|vite\.config\.ts)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+<IfModule mod_setenvif.c>
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+    SetEnvIf X-Auth-Token "(.*)" HTTP_X_AUTH_TOKEN=$1
+    SetEnvIf X-Admin-Token "(.*)" HTTP_X_ADMIN_TOKEN=$1
+</IfModule>
+
+# عبور دادن هدر احراز هویت در محیط cPanel و FastCGI / PHP-FPM
+CGIPassAuth On
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # عبور دادن هدر Authorization به متغیرهای محیطی PHP در سرور
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+    # هدایت مسیرهای API به پوشه api
+    RewriteCond %{REQUEST_URI} ^/api/(.*)$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}/api/%1 -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/api/%1.php -f
+    RewriteRule ^api/(.*)$ api/$1 [L,QSA]
+
+    RewriteCond %{REQUEST_URI} ^/api/ [NC]
+    RewriteRule ^api/(.*)$ api/index.php [L,QSA]
+
+    # درگاه پرداخت تستی شبیه‌ساز
+    RewriteRule ^gateway-sim\.html$ gateway-sim.html [L]
+
+    # بازنویسی مسیرهای پنل مدیریت و صفحه اختصاصی پویش
+    RewriteRule ^admin/?$ admin/index.html [L]
+    RewriteRule ^campaign/?$ campaign/index.html [L]
+
+    # در صورتی که فایل یا پوشه فیزیکی وجود دارد، مستقیماً لود شود
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # صفحه پیش‌فرض اصلی
+    RewriteRule ^$ index.html [L]
+</IfModule>
+
+# هدرهای امنیتی
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
